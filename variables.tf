@@ -18,43 +18,11 @@ EOT
     facebook_application_secret = string
     location                    = string
     resource_group_name         = string
-    page = object({
+    page = list(object({
       access_token = string
       id           = string
-    })
+    }))
   }))
-  validation {
-    condition = alltrue([
-      for k, v in var.bot_channel_facebooks : (
-        length(v.facebook_application_id) > 0
-      )
-    ])
-    error_message = "must not be empty"
-  }
-  validation {
-    condition = alltrue([
-      for k, v in var.bot_channel_facebooks : (
-        length(v.facebook_application_secret) > 0
-      )
-    ])
-    error_message = "must not be empty"
-  }
-  validation {
-    condition = alltrue([
-      for k, v in var.bot_channel_facebooks : (
-        length(v.page.id) > 0
-      )
-    ])
-    error_message = "must not be empty"
-  }
-  validation {
-    condition = alltrue([
-      for k, v in var.bot_channel_facebooks : (
-        length(v.page.access_token) > 0
-      )
-    ])
-    error_message = "must not be empty"
-  }
   # --- Unconfirmed validation candidates, derived from azurerm_bot_channel_facebook's provider source ---
   # Not auto-enabled: either a bespoke provider validator we can't safely translate,
   # or a path that crosses a list-typed block (needs its own for_each wrapping).
@@ -87,5 +55,17 @@ EOT
   #   source:    [from validate.BotName: invalid when len(value) > 42]
   # path: bot_name
   #   source:    [from validate.BotName] !regexp.MustCompile(`^[a-zA-Z0-9][a-zA-Z0-9_-]*$`).MatchString(v)
+  # path: facebook_application_id
+  #   condition: length(value) > 0
+  #   message:   must not be empty
+  # path: facebook_application_secret
+  #   condition: length(value) > 0
+  #   message:   must not be empty
+  # path: page.id
+  #   condition: length(value) > 0
+  #   message:   must not be empty
+  # path: page.access_token
+  #   condition: length(value) > 0
+  #   message:   must not be empty
 }
 

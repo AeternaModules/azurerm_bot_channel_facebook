@@ -7,9 +7,12 @@ resource "azurerm_bot_channel_facebook" "bot_channel_facebooks" {
   location                    = each.value.location
   resource_group_name         = each.value.resource_group_name
 
-  page {
-    access_token = each.value.page.access_token
-    id           = each.value.page.id
+  dynamic "page" {
+    for_each = each.value.page
+    content {
+      access_token = page.value.access_token
+      id           = page.value.id
+    }
   }
 }
 
