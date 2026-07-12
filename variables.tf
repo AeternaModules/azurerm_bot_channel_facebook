@@ -5,6 +5,8 @@ Required:
     - bot_name
     - facebook_application_id
     - facebook_application_secret
+    - facebook_application_secret_key_vault_id (alternative to facebook_application_secret - read from Key Vault instead)
+    - facebook_application_secret_key_vault_secret_name (alternative to facebook_application_secret - read from Key Vault instead)
     - location
     - resource_group_name
     - page (block):
@@ -13,11 +15,13 @@ Required:
 EOT
 
   type = map(object({
-    bot_name                    = string
-    facebook_application_id     = string
-    facebook_application_secret = string
-    location                    = string
-    resource_group_name         = string
+    bot_name                                          = string
+    facebook_application_id                           = string
+    facebook_application_secret                       = string
+    facebook_application_secret_key_vault_id          = optional(string)
+    facebook_application_secret_key_vault_secret_name = optional(string)
+    location                                          = string
+    resource_group_name                               = string
     page = list(object({
       access_token = string
       id           = string
