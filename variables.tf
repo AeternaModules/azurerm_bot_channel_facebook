@@ -5,8 +5,8 @@ Required:
     - bot_name
     - facebook_application_id
     - facebook_application_secret
-    - facebook_application_secret_key_vault_id (alternative to facebook_application_secret - read from Key Vault instead)
-    - facebook_application_secret_key_vault_secret_name (alternative to facebook_application_secret - read from Key Vault instead)
+    - facebook_application_secret_key_vault_id (optional, alternative to facebook_application_secret)
+    - facebook_application_secret_key_vault_secret_name (optional, alternative to facebook_application_secret)
     - location
     - resource_group_name
     - page (block):
@@ -27,6 +27,14 @@ EOT
       id           = string
     }))
   }))
+  validation {
+    condition = alltrue([
+      for k, v in var.bot_channel_facebooks : (
+        length(v.page) >= 1
+      )
+    ])
+    error_message = "Each page list must contain at least 1 items"
+  }
   # --- Unconfirmed validation candidates, derived from azurerm_bot_channel_facebook's provider source ---
   # Not auto-enabled: either a bespoke provider validator we can't safely translate,
   # or a path that crosses a list-typed block (needs its own for_each wrapping).
